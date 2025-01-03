@@ -1,14 +1,17 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const { adminAuth, userAuth } = require("./middlewares/auth");
+const { connectDb } = require("./config/database");
 
-app.use("/admin", adminAuth, (req, res) => {
-  res.json({ message: "Admin access granted" });
-});
+connectDb()
+  .then(() => {
+    console.log("Database connected");
+  })
+  .catch((err) => {
+    console.log("Error connecting to database", err);
+  });
 
-app.get("/user", userAuth, (req, res) => {
-  res.json({ message: "User access granted" });
-});
-app.listen(3000, () => {
+app.listen(3000, async () => {
   console.log("Server has started");
 });
